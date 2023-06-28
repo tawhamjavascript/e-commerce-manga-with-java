@@ -11,6 +11,6 @@ import br.edu.ifpb.tawham.ecommerce.model.ShoppingCart;
 public interface ShoppingCartRepository extends JpaRepository<ShoppingCart, Long>{
 
     @Query("SELECT sc FROM Client c JOIN c.shoppingCart sc where c.id = :id")
-    public ShoppingCart allProductsInShoppingCart(@Param("id") Long id);
+    public ShoppingCart getShoppingCart(@Param("id") Long id);
     
 }

@@ -1,7 +1,10 @@
 package br.edu.ifpb.tawham.ecommerce.model;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import br.edu.ifpb.tawham.ecommerce.DTO.RegisterClientDTO;
+import br.edu.ifpb.tawham.ecommerce.DTO.UserDTO;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -22,17 +25,17 @@ public class Client {
     private String password;
 
     @OneToOne(cascade = CascadeType.ALL)
-    private ShoppingCart shoppingCart;
+    private ShoppingCart shoppingCart = new ShoppingCart();
 
     @OneToMany(mappedBy = "client", 
                cascade = {
                 CascadeType.PERSIST,
                 CascadeType.MERGE
                })
-    private ArrayList<Checkout> checkouts = new ArrayList<>();
+    private List<Checkout> checkouts = new ArrayList<>();
 
     public Client(Long id, String name, String email, String password, 
-                  ShoppingCart shoppingCart, ArrayList<Checkout> checkouts) {
+                  ShoppingCart shoppingCart, List<Checkout> checkouts) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -40,8 +43,19 @@ public class Client {
         this.shoppingCart = shoppingCart;
         this.checkouts = checkouts;
     }
+    public Client(RegisterClientDTO registerClientDTO) {
+        this.name = registerClientDTO.name();
+        this.email = registerClientDTO.email();
+        this.password = registerClientDTO.password();
+    }
+
     public Client() {
     }
+
+    public UserDTO toDTO() {
+        return new UserDTO(this.id);
+    }
+
     public Long getId() {
         return id;
     }
@@ -72,7 +86,7 @@ public class Client {
     public void setShoppingCart(ShoppingCart shoppingCart) {
         this.shoppingCart = shoppingCart;
     }
-    public ArrayList<Checkout> getCheckouts() {
+    public List<Checkout> getCheckouts() {
         return checkouts;
     }
     public void setCheckouts(Checkout checkout) {

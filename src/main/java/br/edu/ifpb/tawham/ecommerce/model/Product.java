@@ -1,7 +1,9 @@
 package br.edu.ifpb.tawham.ecommerce.model;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import br.edu.ifpb.tawham.ecommerce.DTO.ProductDTO;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -36,12 +38,12 @@ public class Product {
         CascadeType.PERSIST,
         CascadeType.MERGE,
     })
-    private ArrayList<ShoppingCart> shoppingCarts = new ArrayList<>();
+    private List<ShoppingCart> shoppingCarts = new ArrayList<>();
 
 
     public Product(Long id, String name, int chapter, String description, String genre, 
                    String author, String publication, double price, String image, 
-                   Vendor vendor, ArrayList<ShoppingCart> shoppingCarts) {
+                   Vendor vendor, List<ShoppingCart> shoppingCarts) {
         this.id = id;
         this.name = name;
         this.chapter = chapter;
@@ -56,8 +58,34 @@ public class Product {
     
 
     }
+    public Product(ProductDTO productDTO) {
+        this.name = productDTO.name();
+        this.chapter = productDTO.chapter();
+        this.description = productDTO.description();
+        this.genre = productDTO.genre();
+        this.author = productDTO.author();
+        this.publication = productDTO.publication();
+        this.price = productDTO.price();
+        this.image = productDTO.image();
+    }
+
+
 
     public Product() {
+    }
+
+    public ProductDTO toDTO() {
+        return new ProductDTO(
+            this.id,
+            this.name,
+            this.chapter,
+            this.description,
+            this.genre,
+            this.author,
+            this.publication,
+            this.price,
+            this.image
+        );
     }
 
     public String getName() {
@@ -132,7 +160,7 @@ public class Product {
         this.vendor = vendor;
     }
 
-    public ArrayList<ShoppingCart> getShoppingCarts() {
+    public List<ShoppingCart> getShoppingCarts() {
         return shoppingCarts;
     }
 
@@ -140,7 +168,18 @@ public class Product {
         this.shoppingCarts.add(shoppingCarts);
     }
 
+    public void removeShoppingCarts(ShoppingCart shoppingCarts) {
+        this.shoppingCarts.remove(shoppingCarts);
+    }
+
     public Long getId() {
         return id;
+    }
+
+    @Override
+    public String toString() {
+        return "Product [id=" + id + ", name=" + name + ", chapter=" + chapter + ", description=" + description
+                + ", genre=" + genre + ", author=" + author + ", publication=" + publication + ", price=" + price
+                + ", image=" + image + ", vendor=" + vendor + ", shoppingCarts=" + shoppingCarts + "]";
     }  
 }

@@ -1,12 +1,16 @@
 package br.edu.ifpb.tawham.ecommerce.model;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import org.hibernate.annotations.ManyToAny;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 
 @Entity
@@ -24,14 +28,14 @@ public class Vendor {
         CascadeType.PERSIST,
         CascadeType.MERGE
     })
-    private ArrayList<Product> products = new ArrayList<>();
+    private List<Product> products = new ArrayList<>();
 
-    @OneToMany(mappedBy = "vendor",
+    @ManyToMany(mappedBy = "vendor",
     cascade = {
         CascadeType.PERSIST,
         CascadeType.MERGE
     })
-    private ArrayList<Checkout> solds = new ArrayList<>();
+    private List<Checkout> solds = new ArrayList<>();
 
     public Vendor(Long id, String name, String email, String password, String description) {
         this.id = id;
@@ -46,7 +50,7 @@ public class Vendor {
     }
 
     public Vendor(Long id, String name, String email, String password, String description, 
-    ArrayList<Product> products, ArrayList<Checkout> solds) {
+    List<Product> products, List<Checkout> solds) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -92,7 +96,7 @@ public class Vendor {
         this.description = description;
     }
 
-    public ArrayList<Product> getProducts() {
+    public List<Product> getProducts() {
         return products;
     }
 
@@ -100,7 +104,7 @@ public class Vendor {
         this.products.add(product);
     }
 
-    public ArrayList<Checkout> getSolds() {
+    public List<Checkout> getSolds() {
         return solds;
     }
 

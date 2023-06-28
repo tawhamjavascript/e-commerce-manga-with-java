@@ -11,6 +11,7 @@ import br.edu.ifpb.tawham.ecommerce.model.Product;
 
 public interface ClientRepository extends JpaRepository<Client, Long>{
     public Client findByEmailAndPassword(String email, String password);
+    
 
     
 

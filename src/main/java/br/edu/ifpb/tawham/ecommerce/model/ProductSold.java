@@ -30,6 +30,17 @@ public class ProductSold {
         this.image = image;
     }
 
+    public ProductSold(Product product) {
+        this.name = product.getName();
+        this.chapter = product.getChapter();
+        this.description = product.getDescription();
+        this.genre = product.getGenre();
+        this.author = product.getAuthor();
+        this.publication = product.getPublication();
+        this.price = product.getPrice();
+        this.image = product.getImage();
+    }
+
     public String getName() {
         return name;
     }
