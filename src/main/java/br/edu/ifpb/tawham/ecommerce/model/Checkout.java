@@ -1,16 +1,12 @@
 package br.edu.ifpb.tawham.ecommerce.model;
 
-
-import java.util.ArrayList;
-import java.util.List;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 
 
@@ -29,16 +25,16 @@ public class Checkout {
     })
     private Client client;
 
-    @ManyToMany(cascade = {
+    @ManyToOne(cascade = {
         CascadeType.PERSIST,
         CascadeType.MERGE
     })
-    private List<Vendor> vendor;
+    private Vendor vendor;
 
-    @ElementCollection
-    private List<ProductSold> productsSold = new ArrayList<>();
+    @Embedded
+    private ProductSold productsSold;
 
-    public Checkout(String date, Client client, List<Vendor> vendor, List<ProductSold> productsSold) {
+    public Checkout(String date, Client client, Vendor vendor, ProductSold productsSold) {
         this.date = date;
         this.client = client;
         this.vendor = vendor;
@@ -65,19 +61,19 @@ public class Checkout {
         this.client = client;
     }
 
-    public List<Vendor> getVendor() {
+    public Vendor getVendor() {
         return vendor;
     }
 
     public void setVendor(Vendor vendor) {
-        this.vendor.add(vendor);
+        this.vendor = vendor;
     }
 
-    public List<ProductSold> getProductsSold() {
+    public ProductSold getProductsSold() {
         return productsSold;
     }
 
     public void setProductsSold(ProductSold productsSold) {
-        this.productsSold.add(productsSold);
+        this.productsSold = productsSold;
     }    
 }

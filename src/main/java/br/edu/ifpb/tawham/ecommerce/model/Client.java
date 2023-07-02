@@ -34,6 +34,9 @@ public class Client {
                })
     private List<Checkout> checkouts = new ArrayList<>();
 
+    public Client() {
+    }
+
     public Client(Long id, String name, String email, String password, 
                   ShoppingCart shoppingCart, List<Checkout> checkouts) {
         this.id = id;
@@ -49,8 +52,6 @@ public class Client {
         this.password = registerClientDTO.password();
     }
 
-    public Client() {
-    }
 
     public UserDTO toDTO() {
         return new UserDTO(this.id);

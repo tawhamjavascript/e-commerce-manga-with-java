@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import br.edu.ifpb.tawham.ecommerce.DTO.ProductDTO;
 import br.edu.ifpb.tawham.ecommerce.DTO.ShoppingCartDTO;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -44,11 +43,7 @@ public class ShoppingCart {
     }
 
     public ShoppingCartDTO toDTO() {
-        List<ProductDTO> productsDTO = new ArrayList<>();
-        for (Product product : this.products) {
-            productsDTO.add(product.toDTO());
-        }
-        return new ShoppingCartDTO(this.id, productsDTO);
+        return new ShoppingCartDTO(this);
     }
 
     public Long getId() {
@@ -69,6 +64,10 @@ public class ShoppingCart {
 
     public void setProducts(Product product) {
         this.products.add(product);
+    }
+
+    public void removeProduct(Product product) {
+        this.products.remove(product);
     }
     
     public boolean removeProduct(Long id) {

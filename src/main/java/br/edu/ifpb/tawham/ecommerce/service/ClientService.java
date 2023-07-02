@@ -15,8 +15,6 @@ import br.edu.ifpb.tawham.ecommerce.model.ProductSold;
 import br.edu.ifpb.tawham.ecommerce.model.ShoppingCart;
 import br.edu.ifpb.tawham.ecommerce.model.Vendor;
 import br.edu.ifpb.tawham.ecommerce.repositories.CheckoutRepository;
-// import br.edu.ifpb.tawham.ecommerce.model.ResponseLogin;
-// import br.edu.ifpb.tawham.ecommerce.model.ShoppingCartView;
 import br.edu.ifpb.tawham.ecommerce.repositories.ClientRepository;
 import br.edu.ifpb.tawham.ecommerce.repositories.ProductRepositoty;
 import br.edu.ifpb.tawham.ecommerce.repositories.ShoppingCartRepository;
@@ -27,11 +25,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.catalina.connector.Response;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
-import org.springframework.context.annotation.Bean;
+
 
 @Service
 public class ClientService {
@@ -47,6 +42,7 @@ public class ClientService {
     @Autowired
     private CheckoutRepository checkoutRepository;
 
+    @Transactional
     public void registerClient(RegisterClientDTO registerClientDTO) {
         clientRepository.save(new Client(registerClientDTO));
     }
@@ -70,9 +66,7 @@ public class ClientService {
         Optional<Product> product = productRepositoty.findById(productDTO.id());
         if (product.isPresent()) {
             shoppingCart.setProducts(product.get());
-            shoppingCartRepository.save(shoppingCart);
             product.get().setShoppingCarts(shoppingCart);
-            productRepositoty.save(product.get());
 
         } else {
             throw new ProductNotFoundException(productDTO.id());
@@ -86,7 +80,6 @@ public class ClientService {
             if(!shoppingCart.removeProduct(idProduct)) {
                 throw new ProductNotFoundException(idProduct);
             }
-            shoppingCartRepository.save(shoppingCart);
         }        
     }
 
@@ -100,30 +93,23 @@ public class ClientService {
             }
             List<Product> products = shoppingCart.getProducts();
             Client client = shoppingCart.getClient();
-            List <ProductSold> productsSold = new ArrayList<>();
-            List <Vendor> vendors = new ArrayList<>();
             products.forEach(product -> {
                 ProductSold productSold = new ProductSold(product);
-                vendors.add(product.getVendor());
-                productsSold.add(productSold);
+                Vendor vendor = product.getVendor();
+                Checkout checkout = new Checkout(LocalDate.now().toString(), client, vendor, productSold);
+                checkoutRepository.save(checkout);
+                vendor.setCheckouts(checkout);
+                client.setCheckouts(checkout);
             });
-
-            client.setCheckouts(new Checkout(LocalDate.now().toString(), client, vendors, productsSold));
-            clientRepository.save(client);
-            shoppingCart.removeAllProducts();
-            shoppingCartRepository.save(shoppingCart);
         }
     }
-
     public List<ProductSold> getCheckouts(Long idClient) {
-        List<Checkout> checkouts = checkoutRepository.getCheckouts(idClient);
-        List<ProductSold> productsSold = new ArrayList<>();
-        checkouts.forEach(checkout -> {
-            checkout.getProductsSold().forEach(productsSold::add);
+       List<ProductSold> productSold = new ArrayList<>();
+       checkoutRepository.getCheckoutsClient(idClient).forEach(checkout -> {
+            productSold.add(checkout.getProductsSold());
         });
-        return productsSold;
+        return productSold;
     }
-    
 }
 
 

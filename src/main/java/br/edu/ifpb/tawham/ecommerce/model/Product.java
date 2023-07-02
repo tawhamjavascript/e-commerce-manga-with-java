@@ -172,6 +172,10 @@ public class Product {
         this.shoppingCarts.remove(shoppingCarts);
     }
 
+    public void removeAllShoppingCarts() {
+        this.shoppingCarts.clear();
+    }
+
     public Long getId() {
         return id;
     }

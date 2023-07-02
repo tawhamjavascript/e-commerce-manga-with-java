@@ -3,14 +3,14 @@ package br.edu.ifpb.tawham.ecommerce.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.annotations.ManyToAny;
 
+import br.edu.ifpb.tawham.ecommerce.DTO.RegisterVendorDTO;
+import br.edu.ifpb.tawham.ecommerce.DTO.UserDTO;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 
 @Entity
@@ -30,12 +30,23 @@ public class Vendor {
     })
     private List<Product> products = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "vendor",
+    @OneToMany(mappedBy = "vendor",
     cascade = {
         CascadeType.PERSIST,
         CascadeType.MERGE
     })
     private List<Checkout> solds = new ArrayList<>();
+
+    public Vendor() {
+
+    }
+
+    public Vendor(RegisterVendorDTO registerVendorDTO) {
+        this.name = registerVendorDTO.name();
+        this.email = registerVendorDTO.email();
+        this.password = registerVendorDTO.password();
+        this.description = registerVendorDTO.description();
+    }
 
     public Vendor(Long id, String name, String email, String password, String description) {
         this.id = id;
@@ -43,10 +54,6 @@ public class Vendor {
         this.email = email;
         this.password = password;
         this.description = description;
-    }
-    
-    public Vendor() {
-
     }
 
     public Vendor(Long id, String name, String email, String password, String description, 
@@ -59,6 +66,11 @@ public class Vendor {
         this.products = products;
         this.solds = solds;
     }
+
+     public UserDTO toDTO() {
+        return new UserDTO(this.id);
+    }
+    
 
     public Long getId() {
         return id;
@@ -102,6 +114,10 @@ public class Vendor {
 
     public void setProducts(Product product) {
         this.products.add(product);
+    }
+
+    public void removeProduct(Product product) {
+        this.products.remove(product);
     }
 
     public List<Checkout> getSolds() {
