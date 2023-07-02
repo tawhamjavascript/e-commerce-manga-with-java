@@ -1,6 +1,7 @@
 package br.edu.ifpb.tawham.ecommerce.controller;
 
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,13 +35,11 @@ public class VendorController {
     private ProductService productService;
 
     @PostMapping("/register")
-    public ResponseEntity<Void> registerVendor(@RequestBody RegisterVendorDTO vendor) {
+    public void registerVendor(@RequestBody RegisterVendorDTO vendor) {
         vendorService.registerVendor(vendor);
-        URI uri = URI.create("/vendor/" + vendor.name());
-        return ResponseEntity.created(uri).build();
     }
 
-    @PostMapping("login")
+    @PostMapping("/login")
     public ResponseEntity<UserDTO> login(@RequestBody LoginDTO loginDTO) throws VendorNotFoundException {
         try {
             UserDTO user = vendorService.login(loginDTO);
@@ -63,14 +62,12 @@ public class VendorController {
     }
 
     @PostMapping("{id}/product")
-    public ResponseEntity<Void> registerProduct(@PathVariable Long id, @RequestBody ProductDTO productDTO) throws VendorNotFoundException {
+    public void registerProduct(@PathVariable Long id, @RequestBody ProductDTO productDTO) throws VendorNotFoundException {
         vendorService.registerProduct(id, productDTO);
-        URI uri = URI.create("/vendor/" + id + "/product");
-        return ResponseEntity.created(uri).build();
     }
 
     @PutMapping("product")
-    public ResponseEntity<Void> updateProduct(@PathVariable Long id, @RequestBody ProductDTO productDTO) {        
+    public ResponseEntity<Void> updateProduct(@RequestBody ProductDTO productDTO) {        
         productService.editProduct(productDTO);
         return ResponseEntity.ok().build();
     }
@@ -79,6 +76,11 @@ public class VendorController {
     public ResponseEntity<List<ProductSold>> getAllProductsCheckout(@PathVariable Long id) {
         List<ProductSold> products = vendorService.getProductsSold(id);
         return ResponseEntity.ok(products);
+    }
+
+    @DeleteMapping("product/{idProduct}")
+    public void deleteProduct(@PathVariable Long idProduct) {
+        productService.deleteProduct(idProduct);
     }
     
 }
