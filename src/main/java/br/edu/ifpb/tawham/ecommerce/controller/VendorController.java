@@ -17,6 +17,7 @@ import br.edu.ifpb.tawham.ecommerce.ErrorsCustomizer.VendorNotFoundException;
 import br.edu.ifpb.tawham.ecommerce.model.ProductSold;
 import br.edu.ifpb.tawham.ecommerce.service.ProductService;
 import br.edu.ifpb.tawham.ecommerce.service.VendorService;
+import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -35,12 +36,12 @@ public class VendorController {
     private ProductService productService;
 
     @PostMapping("/register")
-    public void registerVendor(@RequestBody RegisterVendorDTO vendor) {
+    public void registerVendor(@RequestBody @Valid RegisterVendorDTO vendor) {
         vendorService.registerVendor(vendor);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserDTO> login(@RequestBody LoginDTO loginDTO) throws VendorNotFoundException {
+    public ResponseEntity<UserDTO> login(@RequestBody @Valid LoginDTO loginDTO) throws VendorNotFoundException {
         try {
             UserDTO user = vendorService.login(loginDTO);
             return ResponseEntity.ok(user);
@@ -62,12 +63,12 @@ public class VendorController {
     }
 
     @PostMapping("{id}/product")
-    public void registerProduct(@PathVariable Long id, @RequestBody ProductDTO productDTO) throws VendorNotFoundException {
+    public void registerProduct(@PathVariable Long id, @RequestBody @Valid ProductDTO productDTO) throws VendorNotFoundException {
         vendorService.registerProduct(id, productDTO);
     }
 
     @PutMapping("product")
-    public ResponseEntity<Void> updateProduct(@RequestBody ProductDTO productDTO) {        
+    public ResponseEntity<Void> updateProduct(@RequestBody @Valid ProductDTO productDTO) {        
         productService.editProduct(productDTO);
         return ResponseEntity.ok().build();
     }

@@ -21,6 +21,7 @@ import br.edu.ifpb.tawham.ecommerce.DTO.UserDTO;
 import br.edu.ifpb.tawham.ecommerce.model.ProductSold;
 import br.edu.ifpb.tawham.ecommerce.service.ClientService;
 import br.edu.ifpb.tawham.ecommerce.service.ProductService;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/client")
@@ -33,14 +34,13 @@ public class ClientController {
     private ProductService productService;
 
     @PostMapping("/register")
-    public ResponseEntity<Void> registerClient(@RequestBody RegisterClientDTO client) {
+    public void registerClient(@RequestBody @Valid RegisterClientDTO client) {
         clientService.registerClient(client);
-        URI uri = URI.create("/client/" + client.name());
-        return ResponseEntity.created(uri).build();
+
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserDTO> login(@RequestBody LoginDTO login) {
+    public ResponseEntity<UserDTO> login(@RequestBody @Valid LoginDTO login) {
         UserDTO user =  clientService.login(login);
         if (user != null) {
             return ResponseEntity.ok(user);

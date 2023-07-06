@@ -100,7 +100,9 @@ public class ClientService {
                 checkoutRepository.save(checkout);
                 vendor.setCheckouts(checkout);
                 client.setCheckouts(checkout);
+                product.removeShoppingCarts(shoppingCart);
             });
+            shoppingCart.removeAllProducts();
         }
     }
     public List<ProductSold> getCheckouts(Long idClient) {

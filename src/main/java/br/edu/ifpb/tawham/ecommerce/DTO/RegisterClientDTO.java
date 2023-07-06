@@ -1,24 +1,16 @@
 package br.edu.ifpb.tawham.ecommerce.DTO;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 public record RegisterClientDTO(
-    String name,
-    String email,
-    String password,
-    String confirmPassword
+    @NotBlank(message = "name cannot be empty") @NotNull(message = "name is necessary to register product") String name,
+    @Email String email,
+    @NotBlank(message = "password cannot be empty") @NotNull(message = "password is necessary to register product") String password,
+    @NotBlank(message = "Confirm password cannot be empty") @NotNull(message = "Confirm password is necessary to register product") String confirmPassword
 ) {
     public RegisterClientDTO {
-        if (name == null || name.isBlank()) {
-            throw new IllegalArgumentException("Name cannot be null or blank");
-        }
-        if (email == null || email.isBlank()) {
-            throw new IllegalArgumentException("Email cannot be null or blank");
-        }
-        if (password == null || password.isBlank()) {
-            throw new IllegalArgumentException("Password cannot be null or blank");
-        }
-        if (confirmPassword == null || confirmPassword.isBlank()) {
-            throw new IllegalArgumentException("Confirm password cannot be null or blank");
-        }
         if (!password.equals(confirmPassword)) {
             throw new IllegalArgumentException("Password and confirm password must be equals");
         }
